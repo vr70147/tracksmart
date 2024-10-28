@@ -1,15 +1,44 @@
-#file: noinspection SpellCheckingInspection
 version: '3.8'
 
 services:
-  app:
+  user-service:
     build:
-      context: .
+      context: ../user-service
       dockerfile: Dockerfile
+    container_name: user-service
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/user_db
+    depends_on:
+      - user-db
+
+  report-service:
+    build:
+      context: ../report-service
+      dockerfile: Dockerfile
+    container_name: report-service
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://report-db:5433/report_db
+    depends_on:
+      - report-db
+
+  notification-service:
+    build:
+      context: ../notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8083:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://notification-db:5434/notification_db
+    depends_on:
+      - notification-db
 
   user-db:
     container_name: user-db
