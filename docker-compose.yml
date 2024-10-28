@@ -1,0 +1,81 @@
+#file: noinspection SpellCheckingInspection
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  user-db:
+    container_name: user-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: raanan
+      POSTGRES_PASSWORD: RoniSimba4721
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/main/resources/db/user_db:/flyway/sql
+
+  report-db:
+    container_name: report-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: report_db
+      POSTGRES_USER: raanan
+      POSTGRES_PASSWORD: RoniSimba4721
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./src/main/resources/db/report_db:/flyway/sql
+
+  notification-db:
+    container_name: notification-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: notification_db
+      POSTGRES_USER: raanan
+      POSTGRES_PASSWORD: RoniSimba4721
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./src/main/resources/db/notification_db:/flyway/sql
+
+  flyway-user:
+    image: flyway/flyway:latest
+    depends_on:
+      - user-db
+    entrypoint: [
+      "sh", "-c",
+      "sleep 20 && flyway -url=jdbc:postgresql://user-db:5432/user_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+    ]
+    volumes:
+      - ./src/main/resources/db/user_db:/flyway/sql
+
+  flyway-report:
+    image: flyway/flyway:latest
+    depends_on:
+      - report-db
+    entrypoint: [
+      "sh", "-c",
+      "sleep 20 && flyway -url=jdbc:postgresql://report-db:5433/report_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+    ]
+    volumes:
+      - ./src/main/resources/db/report_db:/flyway/sql
+
+  flyway-notification:
+    image: flyway/flyway:latest
+    depends_on:
+      - notification-db
+    entrypoint: [
+      "sh", "-c",
+      "sleep 20 && flyway -url=jdbc:postgresql://notification-db:5434/notification_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+    ]
+    volumes:
+      - ./src/main/resources/db/notification_db:/flyway/sql

@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: trackSmart
+
+  datasource:
+    url: jdbc:postgresql://user-db:5432/user_db
+    username: raanan
+    password: RoniSimba4721
+
+  flyway:
+    enabled: true
+    locations: classpath:db/user_db
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: tracksmart-consumers
+
+  logging:
+    level:
+      org:
+        springframework: INFO
+      com:
+        example:
+          trackSmart: DEBUG
+
+report:
+  datasource:
+    url: jdbc:postgresql://report-db:5433/report_db
+    username: raanan
+    password: RoniSimba4721
+
+notification:
+  datasource:
+    url: jdbc:postgresql://notification-db:5434/notification_db
+    username: raanan
+    password: RoniSimba4721
