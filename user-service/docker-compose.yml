@@ -9,7 +9,7 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/user_db
     depends_on:
       - user-db
@@ -22,7 +22,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://report-db:5433/report_db
     depends_on:
       - report-db
@@ -35,7 +35,7 @@ services:
     ports:
       - "8083:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://notification-db:5434/notification_db
     depends_on:
       - notification-db
@@ -44,9 +44,9 @@ services:
     container_name: user-db
     image: postgres:14
     environment:
-      POSTGRES_DB: user_db
-      POSTGRES_USER: raanan
-      POSTGRES_PASSWORD: RoniSimba4721
+      - POSTGRES_DB=user_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -56,9 +56,9 @@ services:
     container_name: report-db
     image: postgres:14
     environment:
-      POSTGRES_DB: report_db
-      POSTGRES_USER: raanan
-      POSTGRES_PASSWORD: RoniSimba4721
+      - POSTGRES_DB=report_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
@@ -68,9 +68,9 @@ services:
     container_name: notification-db
     image: postgres:14
     environment:
-      POSTGRES_DB: notification_db
-      POSTGRES_USER: raanan
-      POSTGRES_PASSWORD: RoniSimba4721
+      - POSTGRES_DB=notification_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5434:5432"
     volumes:
@@ -82,7 +82,7 @@ services:
       - user-db
     entrypoint: [
       "sh", "-c",
-      "sleep 20 && flyway -url=jdbc:postgresql://user-db:5432/user_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+      "sleep 20 && flyway -url=jdbc:postgresql://user-db:5432/user_db -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql migrate"
     ]
     volumes:
       - ./src/main/resources/db/user_db:/flyway/sql
@@ -93,7 +93,7 @@ services:
       - report-db
     entrypoint: [
       "sh", "-c",
-      "sleep 20 && flyway -url=jdbc:postgresql://report-db:5433/report_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+      "sleep 20 && flyway -url=jdbc:postgresql://report-db:5433/report_db -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql migrate"
     ]
     volumes:
       - ./src/main/resources/db/report_db:/flyway/sql
@@ -104,7 +104,7 @@ services:
       - notification-db
     entrypoint: [
       "sh", "-c",
-      "sleep 20 && flyway -url=jdbc:postgresql://notification-db:5434/notification_db -user=raanan -password=RoniSimba4721 -locations=filesystem:/flyway/sql migrate"
+      "sleep 20 && flyway -url=jdbc:postgresql://notification-db:5434/notification_db -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql migrate"
     ]
     volumes:
       - ./src/main/resources/db/notification_db:/flyway/sql
