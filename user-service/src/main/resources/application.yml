@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://user-db:5432/user_db
     username: raanan
-    password: RoniSimba4721
+    password: ${POSTGRES_PASSWORD}
 
   flyway:
     enabled: true
@@ -24,14 +24,17 @@ spring:
         example:
           trackSmart: DEBUG
 
+jwt:
+  secret: ${JWT_SECRET}
+
 report:
   datasource:
     url: jdbc:postgresql://report-db:5433/report_db
     username: raanan
-    password: RoniSimba4721
+    password: ${POSTGRES_PASSWORD}
 
 notification:
   datasource:
     url: jdbc:postgresql://notification-db:5434/notification_db
     username: raanan
-    password: RoniSimba4721
+    password: ${POSTGRES_PASSWORD}
